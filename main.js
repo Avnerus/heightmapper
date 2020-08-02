@@ -296,6 +296,18 @@ map = (function () {
             toggleLabels(value);
         });
 
+        gui.source = 'mapzen-elevation-shaded';
+        gui.add(gui, 'source', ['mapzen-elevation-shaded','mapzen-elevation','mapbox-elevation','mapbox-satellite']).name("Source").onChange(function(value) {
+            scene.config.layers["terrain-mapzen"].enabled = (value == 'mapzen-elevation' || value == 'mapzen-elevation-shaded');
+            scene.config.layers["terrain-mapbox"].enabled = (value == 'mapbox-elevation');
+            scene.config.layers["satellite"].enabled = (value == 'mapbox-satellite');
+            scene.config.styles.hillshade.shaders.uniforms.u_enabled = (value == 'mapzen-elevation-shaded');
+            gui.autoexpose = (value == 'mapzen-elevation-shaded');
+            scene.updateConfig();
+            scene.requestRedraw();
+              
+        })
+
         // gui.API_KEY = query.api_key || 'mapzen-XXXXXX';
         // gui.add(gui, 'API_KEY').name("API KEY").onChange(function(value) {
         //     scene.config.sources["elevation-high"].url_params.api_key = value;
